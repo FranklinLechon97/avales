@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Administración · Sistema de Avales</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css?v=10">
+<script defer src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+</head>
+<body>
+
+<div class="topbar">
+  <div>
+    <h1 style="display:inline;"><i data-lucide="shield-check" class="header-icon" aria-hidden="true"></i> Asignación de Avales</h1>
+    <span class="rol-tag">Administrador</span>
+  </div>
+  <div style="display:flex; align-items:center; gap:16px;">
+    <span class="who">Sesión de <b id="whoName">…</b></span>
+    <button class="logout-btn" id="logoutBtn"><i data-lucide="log-out" aria-hidden="true"></i> Cerrar sesión</button>
+  </div>
+</div>
+
+<div class="tabs" id="tabs">
+  <button data-panel="panelAvales" class="active"><i data-lucide="files" aria-hidden="true"></i><span>Avales</span></button>
+  <button data-panel="panelNuevo"><i data-lucide="file-plus-2" aria-hidden="true"></i><span>Nuevo aval</span></button>
+  <button data-panel="panelReportes"><i data-lucide="chart-no-axes-column" aria-hidden="true"></i><span>Reportes y estadísticas</span></button>
+  <button data-panel="panelUsuarios"><i data-lucide="users" aria-hidden="true"></i><span>Asesores</span></button>
+</div>
+
+<div class="wrap">
+
+  <!-- ============ PANEL: LISTA DE AVALES ============ -->
+  <div class="panel active" id="panelAvales">
+    <div class="filters">
+      <div class="f">
+        <label for="fAsesor">Asesor</label>
+        <select id="fAsesor"><option value="">Todos</option></select>
+      </div>
+      <div class="f">
+        <label for="fEstado">Estado negociación</label>
+        <select id="fEstado">
+          <option value="">Todos</option>
+          <option>PENDIENTE</option>
+          <option>PENDIENTE DOCUMENTACION</option>
+          <option>EN NEGOCIACION</option>
+          <option>NO ACCEDE CLIENTE</option>
+          <option>APROBADO</option>
+          <option>RECHAZADO</option>
+        </select>
+      </div>
+      <div class="f">
+        <label for="fCumplimiento">Cumplimiento</label>
+        <select id="fCumplimiento">
+          <option value="">Todos</option>
+          <option value="correcto">Correcto</option>
+          <option value="fuera_de_tiempo">Fuera de tiempo</option>
+        </select>
+      </div>
+      <div class="f">
+        <label for="fDesde">Desde</label>
+        <input type="date" id="fDesde">
+      </div>
+      <div class="f">
+        <label for="fHasta">Hasta</label>
+        <input type="date" id="fHasta">
+      </div>
+      <button class="btn-sm" id="btnFiltrar">Filtrar</button>
+      <button class="btn-ghost" id="btnLimpiar">Limpiar</button>
+      <button class="btn-ghost" id="btnExportarExcel">⬇ Descargar Excel</button>
+    </div>
+
+    <div class="table-wrap">
+      <table id="tablaAvales">
+        <thead>
+          <tr>
+            <th>N°</th><th>Fecha</th><th>Asignación</th><th>Asesor</th>
+            <th>1er contacto</th><th>Cumplimiento</th><th>Cédula</th>
+            <th class="num">Calif.</th><th>Cliente</th><th>Teléfono</th>
+            <th>Ciudad</th><th>Actividad</th><th class="num">Monto</th>
+            <th>Estado</th><th>Producto</th><th>Cierre</th><th>Exitosa</th><th>Adjunto</th><th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="cuerpoAvales">
+          <tr><td colspan="19"><div class="loading">Cargando avales…</div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ============ PANEL: NUEVO AVAL ============ -->
+  <div class="panel" id="panelNuevo">
+    <div class="form-card">
+      <span class="mono" style="font-size:0.7rem; color:#AEB8C4; letter-spacing:0.04em;">Registro</span>
+      <h2>Nuevo aval de crédito</h2>
+      <div class="sub">Registra el aval y asígnalo a un asesor para su revisión.</div>
+
+      <form id="formAval" novalidate>
+        <div class="form-grid">
+          <div class="field"><label for="fecha">Fecha</label><input type="date" id="fecha"></div>
+          <div class="field"><label for="hora_asignacion">Hora de asignación *</label><input type="time" id="hora_asignacion"></div>
+          <div class="field"><label for="asesor_id">Asesor asignado</label><select id="asesor_id"><option value="">Sin asignar</option></select></div>
+          <div class="field"><label for="cedula">Cédula *</label><input type="text" id="cedula" placeholder="1234567890"></div>
+          <div class="field"><label for="calificacion_aval">Calificación del aval</label><input type="number" id="calificacion_aval" placeholder="504"></div>
+          <div class="field"><label for="cliente">Cliente *</label><input type="text" id="cliente" placeholder="Apellidos y nombres"></div>
+          <div class="field"><label for="telefono">Teléfono</label><input type="text" id="telefono" placeholder="0995321338"></div>
+          <div class="field"><label for="gestor_contact_center">Gestor contact center</label><input type="text" id="gestor_contact_center"></div>
+          <div class="field"><label for="ciudad">Ciudad</label><input type="text" id="ciudad" placeholder="QUITO"></div>
+          <div class="field">
+            <label for="actividad_economica">Actividad económica</label>
+            <select id="actividad_economica">
+              <option value="">Selecciona…</option>
+              <option>DEPENDIENTE</option>
+              <option>INDEPENDIENTE</option>
+            </select>
+          </div>
+          <div class="field"><label for="monto">Monto</label><input type="number" step="0.01" id="monto"></div>
+          <div class="field">
+            <label for="producto">Producto</label>
+            <select id="producto">
+              <option value="">Selecciona…</option>
+              <option>PAGUEMOS JUNTOS</option>
+              <option>CREDITO</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="estado_negociacion">Estado negociación</label>
+            <select id="estado_negociacion">
+              <option>PENDIENTE</option>
+              <option>PENDIENTE DOCUMENTACION</option>
+              <option>EN NEGOCIACION</option>
+              <option>NO ACCEDE CLIENTE</option>
+              <option>APROBADO</option>
+              <option>RECHAZADO</option>
+            </select>
+          </div>
+        </div>
+        <div class="field"><label for="observaciones">Observaciones</label><textarea id="observaciones"></textarea></div>
+
+        <button type="submit" class="btn-primary">Registrar aval</button>
+        <div class="msg" id="formMsg"></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============ PANEL: REPORTES ============ -->
+  <div class="panel" id="panelReportes">
+    <div class="stats" id="statsResumen">
+      <div class="loading" style="grid-column:1/-1;">Calculando estadísticas…</div>
+    </div>
+
+    <div class="section-head">
+      <h2>Listado de atención por asesor</h2>
+      <button class="btn-ghost" id="btnRefrescarReportes">Actualizar</button>
+    </div>
+    <div class="table-wrap" style="margin-bottom:28px;">
+      <table>
+        <thead>
+          <tr>
+            <th>Asesor</th>
+            <th class="num">Asignados</th>
+            <th class="num">A tiempo</th>
+            <th class="num">Fuera de tiempo</th>
+            <th class="num">Sin contactar</th>
+            <th>Cumplimiento</th>
+            <th class="num">Exitosos</th>
+            <th class="num">No exitosos</th>
+            <th class="num">Pendientes</th>
+            <th>Tasa de éxito</th>
+          </tr>
+        </thead>
+        <tbody id="cuerpoPorAsesor">
+          <tr><td colspan="10"><div class="loading">Cargando…</div></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-head"><h2>Distribución por estado de negociación</h2></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Estado</th><th class="num">Total</th><th>Participación</th></tr></thead>
+        <tbody id="cuerpoPorEstado">
+          <tr><td colspan="3"><div class="loading">Cargando…</div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ============ PANEL: USUARIOS ============ -->
+  <div class="panel" id="panelUsuarios">
+    <div class="form-card">
+      <span class="mono" style="font-size:0.7rem; color:#AEB8C4; letter-spacing:0.04em;">Gestión de accesos</span>
+      <h2>Crear usuario</h2>
+      <div class="sub">Da de alta asesores u otros administradores.</div>
+      <form id="formUsuario" novalidate>
+        <div class="form-grid">
+          <div class="field"><label for="uNombre">Nombre completo *</label><input type="text" id="uNombre"></div>
+          <div class="field"><label for="uEmail">Email *</label><input type="email" id="uEmail"></div>
+          <div class="field"><label for="uPassword">Contraseña *</label><input type="password" id="uPassword" placeholder="Mínimo 6 caracteres"></div>
+          <div class="field">
+            <label for="uRol">Perfil *</label>
+            <select id="uRol"><option value="asesor">Asesor</option><option value="administrador">Administrador</option></select>
+          </div>
+        </div>
+        <button type="submit" class="btn-primary">Crear usuario</button>
+        <div class="msg" id="usuarioMsg"></div>
+      </form>
+    </div>
+
+    <div class="usuarios-titulo-pdf">
+
+  <h3>Usuarios registrados</h3>
+
+  <button
+    type="button"
+    class="btn-usuarios-pdf"
+    onclick="generarPDFUsuarios()"
+    title="Descargar listado de usuarios en PDF"
+  >
+    &#128196; Generar PDF
+  </button>
+
+</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Nombre</th><th>Email</th><th>Perfil</th><th>Estado</th><th>Acciones</th></tr></thead>
+        <tbody id="cuerpoUsuarios">
+          <tr><td colspan="5"><div class="loading">Cargando…</div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- Modal de asignación / edición -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <span class="mono" style="font-size:0.7rem; color:#AEB8C4; letter-spacing:0.04em;" id="modalTag">Aval</span>
+    <h2 id="modalTitulo">Editar aval</h2>
+    <form id="formEditar" novalidate>
+      <input type="hidden" id="editId">
+      <div class="field">
+        <label for="editAsesor">Asesor asignado</label>
+        <select id="editAsesor"><option value="">Sin asignar</option></select>
+      </div>
+      <div class="field-row">
+        <div class="field"><label for="editHoraContacto">Hora primer contacto</label><input type="time" id="editHoraContacto"></div>
+        <div class="field">
+          <label for="editEstado">Estado negociación</label>
+          <select id="editEstado">
+            <option>PENDIENTE</option>
+            <option>PENDIENTE DOCUMENTACION</option>
+            <option>EN NEGOCIACION</option>
+            <option>NO ACCEDE CLIENTE</option>
+            <option>APROBADO</option>
+            <option>RECHAZADO</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label for="editFechaCierre">Fecha de cierre</label><input type="date" id="editFechaCierre"></div>
+        <div class="field"><label for="editHoraCierre">Hora de cierre</label><input type="time" id="editHoraCierre"></div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="editExitosa">Atención exitosa</label>
+          <select id="editExitosa"><option value="">Sin definir</option><option value="SI">SI</option><option value="NO">NO</option></select>
+        </div>
+        <div class="field"><label for="editMonto">Monto</label><input type="number" step="0.01" id="editMonto"></div>
+      </div>
+      <div class="field"><label for="editObservaciones">Observaciones</label><textarea id="editObservaciones"></textarea></div>
+      <div class="msg" id="editMsg"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" id="btnCancelarModal">Cancelar</button>
+        <button type="submit" class="btn-primary" style="margin-top:0;">Guardar cambios</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="/js/admin.js"></script>
+<script>
+  // Los íconos son decorativos; se conservan data-panel, clases e IDs.
+  window.addEventListener("load", () => {
+    if (window.lucide) window.lucide.createIcons();
+  });
+</script>
+</body>
+</html>

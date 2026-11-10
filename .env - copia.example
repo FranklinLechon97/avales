@@ -1,0 +1,18 @@
+# Copia este archivo como ".env" y completa tus datos reales.
+
+# Conexión a PostgreSQL
+PGHOST=localhost
+PGPORT=5432
+PGDATABASE=sistema_avales
+PGUSER=postgres
+PGPASSWORD=tu_password
+
+# Puerto donde corre el servidor Express
+PORT=3000
+
+# Clave secreta para firmar las cookies de sesión (usa algo largo y aleatorio)
+SESSION_SECRET=cambia_esto_por_una_cadena_larga_y_aleatoria
+
+# Minutos permitidos entre la asignación y el primer contacto para
+# considerar el "CUMPLIMIENTO DE ATENCIÓN" como CORRECTO (si no, FUERA DE TIEMPO).
+SLA_MINUTOS=30
