@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mis avales · Sistema de Avales</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div>
+    <h1 style="display:inline;">Mis avales asignados</h1>
+    <span class="rol-tag">Asesor</span>
+  </div>
+  <div style="display:flex; align-items:center; gap:16px;">
+    <span class="who">Sesión de <b id="whoName">…</b></span>
+    <button class="btn-sm" id="btnNuevoAval">+ Nuevo aval</button>
+    <button class="logout-btn" id="logoutBtn">Cerrar sesión</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="stats" id="misStats">
+    <div class="loading" style="grid-column:1/-1;">Calculando…</div>
+  </div>
+
+  <div class="filters">
+    <div class="f">
+      <label for="fEstado">Estado negociación</label>
+      <select id="fEstado">
+        <option value="">Todos</option>
+        <option>PENDIENTE</option>
+        <option>PENDIENTE DOCUMENTACION</option>
+        <option>EN NEGOCIACION</option>
+        <option>NO ACCEDE CLIENTE</option>
+        <option>APROBADO</option>
+        <option>RECHAZADO</option>
+      </select>
+    </div>
+    <div class="f">
+      <label for="fCumplimiento">Cumplimiento</label>
+      <select id="fCumplimiento">
+        <option value="">Todos</option>
+        <option value="correcto">Correcto</option>
+        <option value="fuera_de_tiempo">Fuera de tiempo</option>
+      </select>
+    </div>
+    <button class="btn-sm" id="btnFiltrar">Filtrar</button>
+    <button class="btn-ghost" id="btnLimpiar">Limpiar</button>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>N°</th><th>Fecha</th><th>Asignación</th><th>1er contacto</th>
+          <th>Cumplimiento</th><th>Cédula</th><th class="num">Calif.</th>
+          <th>Cliente</th><th>Teléfono</th><th>Ciudad</th><th>Actividad</th>
+          <th class="num">Monto</th><th>Estado</th><th>Producto</th>
+          <th>Cierre</th><th>Exitosa</th><th>Adjunto</th><th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="cuerpoAvales">
+        <tr><td colspan="18"><div class="loading">Cargando tus avales…</div></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- Modal de nuevo aval (registrado y asignado automáticamente al asesor en sesión) -->
+<div class="modal-bg" id="modalNuevoBg">
+  <div class="modal">
+    <span class="mono" style="font-size:0.7rem; color:#AEB8C4; letter-spacing:0.04em;">Registro</span>
+    <h2>Nuevo aval de crédito</h2>
+    <div class="sub" style="color:#AEB8C4; font-size:0.83rem; margin:-10px 0 16px;">Quedará asignado a tu propio usuario.</div>
+
+    <form id="formNuevoAval" novalidate>
+      <div class="field-row">
+        <div class="field"><label for="nFecha">Fecha</label><input type="date" id="nFecha"></div>
+        <div class="field"><label for="nHoraAsignacion">Hora de asignación *</label><input type="time" id="nHoraAsignacion"></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label for="nCedula">Cédula *</label><input type="text" id="nCedula" placeholder="1234567890"></div>
+        <div class="field"><label for="nCalificacion">Calificación del aval</label><input type="number" id="nCalificacion" placeholder="504"></div>
+      </div>
+      <div class="field"><label for="nCliente">Cliente *</label><input type="text" id="nCliente" placeholder="Apellidos y nombres"></div>
+      <div class="field-row">
+        <div class="field"><label for="nTelefono">Teléfono</label><input type="text" id="nTelefono" placeholder="0995321338"></div>
+        <div class="field"><label for="nCiudad">Ciudad</label><input type="text" id="nCiudad" placeholder="QUITO"></div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="nActividad">Actividad económica</label>
+          <select id="nActividad">
+            <option value="">Selecciona…</option>
+            <option>DEPENDIENTE</option>
+            <option>INDEPENDIENTE</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="nProducto">Producto</label>
+          <select id="nProducto">
+            <option value="">Selecciona…</option>
+            <option>PAGUEMOS JUNTOS</option>
+            <option>CREDITO</option>
+          </select>
+        </div>
+      </div>
+      <div class="field"><label for="nGestor">Gestor contact center</label><input type="text" id="nGestor"></div>
+      <div class="field"><label for="nObservaciones">Observaciones</label><textarea id="nObservaciones"></textarea></div>
+
+      <div class="msg" id="nuevoAvalMsg"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" id="btnCancelarNuevo">Cancelar</button>
+        <button type="submit" class="btn-primary" style="margin-top:0;">Registrar aval</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal de registro de gestión -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <span class="mono" style="font-size:0.7rem; color:#AEB8C4; letter-spacing:0.04em;">Registro de gestión</span>
+    <h2 id="modalTitulo">Registrar atención</h2>
+    <form id="formGestion" novalidate>
+      <input type="hidden" id="editId">
+
+      <div style="background:#232E3C; border-radius:3px; padding:12px 14px; margin-bottom:16px; font-size:0.82rem; color:#AEB8C4;">
+        <div>Asignado a las <b class="mono" id="infoHoraAsignacion" style="color:#F7F5F1;">—</b></div>
+        <div style="margin-top:4px;">El cumplimiento se calcula automáticamente al guardar la hora de primer contacto.</div>
+      </div>
+
+      <div class="field-row">
+        <div class="field"><label for="editHoraContacto">Hora primer contacto</label><input type="time" id="editHoraContacto"></div>
+        <div class="field">
+          <label for="editEstado">Estado negociación</label>
+          <select id="editEstado">
+            <option>PENDIENTE</option>
+            <option>PENDIENTE DOCUMENTACION</option>
+            <option>EN NEGOCIACION</option>
+            <option>NO ACCEDE CLIENTE</option>
+            <option>APROBADO</option>
+            <option>RECHAZADO</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="editProducto">Producto</label>
+          <select id="editProducto">
+            <option value="">Selecciona…</option>
+            <option>PAGUEMOS JUNTOS</option>
+            <option>CREDITO</option>
+          </select>
+        </div>
+        <div class="field"><label for="editMonto">Monto</label><input type="number" step="0.01" id="editMonto"></div>
+      </div>
+
+      <div class="field-row">
+        <div class="field"><label for="editFechaCierre">Fecha de cierre</label><input type="date" id="editFechaCierre"></div>
+        <div class="field"><label for="editHoraCierre">Hora de cierre</label><input type="time" id="editHoraCierre"></div>
+      </div>
+
+      <div class="field">
+        <label for="editExitosa">¿Atención exitosa?</label>
+        <select id="editExitosa"><option value="">Sin definir</option><option value="SI">SI</option><option value="NO">NO</option></select>
+      </div>
+
+      <div class="field"><label for="editObservaciones">Observaciones</label><textarea id="editObservaciones"></textarea></div>
+
+      <div class="msg" id="editMsg"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" id="btnCancelarModal">Cancelar</button>
+        <button type="submit" class="btn-primary" style="margin-top:0;">Guardar gestión</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<input type="file" id="inputAdjunto" accept=".jpg,.jpeg,.png,.webp,.gif,.pdf,.doc,.docx" style="display:none;">
+
+<script src="/js/asesor.js"></script>
+</body>
+</html>

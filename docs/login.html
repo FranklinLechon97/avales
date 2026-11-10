@@ -1,0 +1,410 @@
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>Ingresar · Sistema de Avales</title>
+
+  <!-- FUENTES -->
+  <link rel="preconnect"
+        href="https://fonts.googleapis.com">
+
+  <link rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap"
+    rel="stylesheet">
+
+  <!-- CSS PRINCIPAL -->
+  <link rel="stylesheet"
+        href="/css/style.css?v=17">
+
+  <!-- LUCIDE ICONS -->
+  <script
+    src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"
+    defer>
+  </script>
+
+  <!-- ESTILOS DEL ENCABEZADO FLOTANTE -->
+  <style>
+
+    /* CONTENEDOR GENERAL */
+    .login-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 22px;
+      min-height: 100vh;
+      min-height: 100dvh;
+      padding: 28px 16px;
+    }
+
+    /* ENCABEZADO FLOTANTE */
+    .login-floating-header {
+      width: 100%;
+      max-width: 520px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 20px 24px;
+
+      background: linear-gradient(
+        120deg,
+        rgba(19, 85, 122, 0.88),
+        rgba(0, 151, 166, 0.80)
+      );
+
+      border: 1px solid rgba(255,255,255,.38);
+      border-radius: 18px;
+
+      box-shadow: 0 14px 35px rgba(15,40,55,.24);
+
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+
+      color: #ffffff;
+    }
+
+    /* ÍCONO DEL ENCABEZADO */
+    .floating-icon {
+      width: 54px;
+      height: 54px;
+      flex-shrink: 0;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background: rgba(255,255,255,.18);
+      border: 1px solid rgba(255,255,255,.30);
+      border-radius: 15px;
+    }
+
+    .floating-icon svg {
+      width: 29px;
+      height: 29px;
+      color: #ffffff;
+    }
+
+    /* TÍTULO DEL SISTEMA */
+    .login-floating-header h2 {
+      margin: 0;
+      color: #ffffff;
+
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.35;
+      letter-spacing: .3px;
+    }
+
+    /* DESCRIPCIÓN */
+    .login-floating-header p {
+      margin: 6px 0 0;
+      color: #e4f8fc;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    /* FORMULARIO */
+    .login-screen .login-card {
+      width: 100%;
+      max-width: 430px;
+      margin: 0;
+    }
+
+    /* ÍCONO INTERIOR */
+    .login-card .login-brand {
+      margin-bottom: 14px;
+    }
+
+    /* ADAPTACIÓN PARA CELULARES */
+    @media (max-width: 600px) {
+
+      .login-screen {
+        gap: 16px;
+        padding: 18px 14px;
+      }
+
+      .login-floating-header {
+        padding: 16px;
+        gap: 12px;
+        border-radius: 14px;
+      }
+
+      .floating-icon {
+        width: 45px;
+        height: 45px;
+      }
+
+      .floating-icon svg {
+        width: 24px;
+        height: 24px;
+      }
+
+      .login-floating-header h2 {
+        font-size: 15px;
+      }
+
+      .login-floating-header p {
+        font-size: 11px;
+      }
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <!-- ==========================================
+       PANTALLA GENERAL DE ACCESO
+       ========================================== -->
+
+  <div class="login-screen">
+
+    <!-- ========================================
+         ENCABEZADO FLOTANTE
+         ======================================== -->
+
+    <!-- ENCABEZADO SUPERIOR ELEGANTE -->
+<header class="login-floating-header">
+
+  <div class="floating-icon">
+    <i data-lucide="shield-check"></i>
+  </div>
+
+  <h2>ASIGNACIÓN DE AVALES DE CRÉDITO</h2>
+
+  <p>Plataforma de gestión y control de avales</p>
+
+</header>
+
+    <!-- FIN DEL ENCABEZADO -->
+
+
+    <!-- ========================================
+         TARJETA DE AUTENTICACIÓN
+         ======================================== -->
+
+    <div class="login-card">
+
+      <!-- ======================================
+           INICIO DE SESIÓN
+           ====================================== -->
+
+      <div id="loginView">
+
+        <div class="login-brand">
+          <i data-lucide="lock-keyhole"></i>
+        </div>
+
+        <h1>Ingreso al sistema</h1>
+
+        <p class="sub">
+          Accede con tu cuenta de asesor o administrador.
+        </p>
+
+        <form id="loginForm" novalidate>
+
+          <!-- CORREO -->
+          <div class="field">
+
+            <label for="loginEmail">
+              Email
+            </label>
+
+            <input
+              type="email"
+              id="loginEmail"
+              autocomplete="username"
+              placeholder="tu@empresa.com">
+
+          </div>
+
+          <!-- CONTRASEÑA -->
+          <div class="field">
+
+            <label for="loginPassword">
+              Contraseña
+            </label>
+
+            <input
+              type="password"
+              id="loginPassword"
+              autocomplete="current-password"
+              placeholder="••••••••">
+
+          </div>
+
+          <!-- BOTÓN INGRESAR -->
+          <button
+            type="submit"
+            class="btn-primary">
+
+            Ingresar
+
+          </button>
+
+          <!-- MENSAJES -->
+          <div
+            class="msg"
+            id="loginMsg">
+          </div>
+
+        </form>
+
+        <!-- CAMBIAR A REGISTRO -->
+        <div class="switch-row">
+
+          ¿No tienes cuenta?
+
+          <button
+            type="button"
+            class="link-btn"
+            id="showRegister">
+
+            Crear una
+
+          </button>
+
+        </div>
+
+      </div>
+
+      <!-- FIN INICIO DE SESIÓN -->
+
+
+      <!-- ======================================
+           REGISTRO DE USUARIOS
+           ====================================== -->
+
+      <div
+        id="registerView"
+        style="display:none;">
+
+        <div class="login-brand">
+          <i data-lucide="user-round-plus"></i>
+        </div>
+
+        <h1>Crear cuenta</h1>
+
+        <p class="sub">
+          Las cuentas nuevas se crean con perfil de asesor.
+          Un administrador puede cambiarlo después.
+        </p>
+
+        <form id="registerForm" novalidate>
+
+          <!-- NOMBRE -->
+          <div class="field">
+
+            <label for="regNombre">
+              Nombre completo
+            </label>
+
+            <input
+              type="text"
+              id="regNombre"
+              placeholder="Ej. Nelson Rivera">
+
+          </div>
+
+          <!-- CORREO -->
+          <div class="field">
+
+            <label for="regEmail">
+              Email
+            </label>
+
+            <input
+              type="email"
+              id="regEmail"
+              autocomplete="username"
+              placeholder="tu@empresa.com">
+
+          </div>
+
+          <!-- CONTRASEÑA -->
+          <div class="field">
+
+            <label for="regPassword">
+              Contraseña
+            </label>
+
+            <input
+              type="password"
+              id="regPassword"
+              autocomplete="new-password"
+              placeholder="Mínimo 6 caracteres">
+
+          </div>
+
+          <!-- BOTÓN REGISTRO -->
+          <button
+            type="submit"
+            class="btn-primary">
+
+            Crear cuenta
+
+          </button>
+
+          <!-- MENSAJES -->
+          <div
+            class="msg"
+            id="registerMsg">
+          </div>
+
+        </form>
+
+        <!-- REGRESAR AL LOGIN -->
+        <div class="switch-row">
+
+          ¿Ya tienes cuenta?
+
+          <button
+            type="button"
+            class="link-btn"
+            id="showLogin">
+
+            Iniciar sesión
+
+          </button>
+
+        </div>
+
+      </div>
+
+      <!-- FIN REGISTRO -->
+
+    </div>
+
+    <!-- FIN TARJETA -->
+
+  </div>
+
+  <!-- ==========================================
+       JAVASCRIPT ORIGINAL
+       ========================================== -->
+
+  <script src="/js/login.js"></script>
+
+  <!-- INICIALIZAR ÍCONOS -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      if (window.lucide) {
+        window.lucide.createIcons();
+      }
+    });
+  </script>
+
+</body>
+</html>
